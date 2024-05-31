@@ -5,7 +5,7 @@ FROM php:8.1-fpm
 WORKDIR /var/www
 
 # Install dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y \
     build-essential \
     libpng-dev \
     libjpeg-dev \
@@ -21,6 +21,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2-dev \
     libzip-dev \
     default-mysql-client
+
+# Add public keys
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9 \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6ED0E7B82643E131 \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F8D2585B8783D481 \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 54404762BBB6E853 \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BDE6D2B9216EC7A8
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
