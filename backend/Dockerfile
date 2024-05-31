@@ -22,9 +22,6 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     default-mysql-client
 
-# Disable GPG signature check during apt-get update
-RUN echo 'Acquire::AllowInsecureRepositories "true";' > /etc/apt/apt.conf.d/99insecure
-
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
 
