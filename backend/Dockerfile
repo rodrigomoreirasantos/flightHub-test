@@ -4,11 +4,8 @@ FROM php:8.1-fpm
 # Set working directory
 WORKDIR /var/www
 
-# Desativar verificação de assinatura GPG durante o apt-get update
-RUN echo 'Acquire::AllowInsecureRepositories "true";' > /etc/apt/apt.conf.d/99insecure
-
 # Install dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpng-dev \
     libjpeg-dev \
