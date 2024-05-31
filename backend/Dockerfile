@@ -22,6 +22,16 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     default-mysql-client
 
+# Add public keys and repositories
+RUN curl -fsSL https://keyserver.ubuntu.com/pks/lookup?op=get&search=0E98404D386FA1D9 | gpg --dearmor -o /usr/share/keyrings/0E98404D386FA1D9.gpg && \
+    curl -fsSL https://keyserver.ubuntu.com/pks/lookup?op=get&search=6ED0E7B82643E131 | gpg --dearmor -o /usr/share/keyrings/6ED0E7B82643E131.gpg && \
+    curl -fsSL https://keyserver.ubuntu.com/pks/lookup?op=get&search=F8D2585B8783D481 | gpg --dearmor -o /usr/share/keyrings/F8D2585B8783D481.gpg && \
+    curl -fsSL https://keyserver.ubuntu.com/pks/lookup?op=get&search=54404762BBB6E853 | gpg --dearmor -o /usr/share/keyrings/54404762BBB6E853.gpg && \
+    curl -fsSL https://keyserver.ubuntu.com/pks/lookup?op=get&search=BDE6D2B9216EC7A8 | gpg --dearmor -o /usr/share/keyrings/BDE6D2B9216EC7A8.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/0E98404D386FA1D9.gpg] http://deb.debian.org/debian bookworm main" > /etc/apt/sources.list.d/debian.list && \
+    echo "deb [signed-by=/usr/share/keyrings/6ED0E7B82643E131.gpg] http://deb.debian.org/debian bookworm-updates main" >> /etc/apt/sources.list.d/debian.list && \
+    echo "deb [signed-by=/usr/share/keyrings/F8D2585B8783D481.gpg] http://deb.debian.org/debian-security bookworm-security main" >> /etc/apt/sources.list.d/debian.list
+
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
 
