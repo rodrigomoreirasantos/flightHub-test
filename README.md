@@ -81,6 +81,16 @@ git clone git@github.com:rodrigomoreirasantos/flightHub-test.git
     php artisan db:seed --class=FlightsTableSeeder
     ```
 
+# Running the Backend
+
+1. Make sure you are in the backend directory.
+
+2. Start the Laravel server on port 8000:
+
+    ```sh
+    php artisan serve --port=8000
+    ```
+
 # Running the Frontend
 
 1. Navigate to the frontend directory:
