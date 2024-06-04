@@ -1,151 +1,110 @@
-# FlightHub Installation Guide
+# FlightHub Project Setup
 
-Welcome to FlightHub! This detailed guide will help you set up and run FlightHub on your local machine. Carefully follow the steps below to get started.
+## Prerequisites
 
-## System Requirements
+Before you begin, make sure you have the following software installed on your machine:
 
-Make sure your system meets the following requirements before proceeding:
+1. **Node.js**:
+   - Make sure you have Node.js installed. Use version 20.11.0.
+   - To check the installed version, use the command:
+     ```sh
+     node -v
+     ```
+   - To install a specific version of Node.js, you can use the [Node Version Manager (nvm)](https://github.com/nvm-sh/nvm):
+     ```sh
+     nvm install 20.11.0
+     nvm use 20.11.0
+     ```
 
-- Docker installed
-- Docker Compose installed
-- Internet connection
-- GPG installed
+2. **Docker**:
+   - Download and install Docker from the [official download page](https://www.docker.com/get-started).
 
-## Installing Docker and Docker Compose
+## Cloning the Repository
 
-### Windows:
+Clone the project repository to your local machine:
 
-1. Download and install Docker Desktop for Windows from the [official Docker website](https://www.docker.com/products/docker-desktop).
-2. After installation, Docker Desktop will start automatically.
-3. Verify the Docker Compose installation by opening the Command Prompt and typing:
+```sh
+git clone https://github.com/your-username/your-repository.git
+cd your-repository
+```
+# Database Configuration
+
+## Downloading and Running the MySQL Image
+
+1. Download the MySQL image using Docker:
+
     ```sh
-    docker-compose --version
+    docker pull mysql
     ```
 
-### macOS:
+2. Start the MySQL container with the provided configurations:
 
-1. Download and install Docker Desktop for macOS from the [official Docker website](https://www.docker.com/products/docker-desktop).
-2. Open the downloaded `.dmg` file and drag the Docker icon to the "Applications" folder.
-3. Open Docker from the "Applications" folder.
-4. Verify the Docker Compose installation by opening the Terminal and typing:
     ```sh
-    docker-compose --version
+    docker run -d \
+    --name flightHub-mysql \
+    -e MYSQL_ROOT_PASSWORD=password \
+    -e MYSQL_DATABASE=flightHub \
+    -p 3306:3306 \
+    mysql
     ```
 
-### Linux (Ubuntu):
+3. Check if the container is running:
 
-1. Open the Terminal.
-2. Run the following commands to install Docker:
     ```sh
-    sudo apt-get update
-    sudo apt-get install \
-        ca-certificates \
-        curl \
-        gnupg \
-        lsb-release
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update
-    sudo apt-get install docker-ce docker-ce-cli containerd.io
-    ```
-3. Run the following commands to install Docker Compose:
-    ```sh
-    sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep tag_name | cut -d '"' -f 4)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-    ```
-4. Verify the Docker Compose installation by typing:
-    ```sh
-    docker-compose --version
+    docker ps
     ```
 
-## Verifying and Installing GPG
+# MySQL Workbench Configuration
 
-### Windows:
+1. Download and install MySQL Workbench.
 
-1. Download and install Gpg4win from the [official Gpg4win website](https://www.gpg4win.org/).
-2. After installation, open "Kleopatra" and follow the instructions to generate a new GPG key pair.
+2. Connect to the MySQL database running on Docker:
+   - Hostname: 127.0.0.1
+   - Port: 3306
+   - User: root
+   - Password: password
 
-### macOS:
+3. Create the flightHub database if it does not exist yet (should have been automatically created by Docker).
 
-1. Open the Terminal.
-2. Install Homebrew using the following command:
+# Database Seed
+
+1. Navigate to the backend directory:
+
     ```sh
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    ```
-3. Then, install GPG with Homebrew using the command:
-    ```sh
-    brew install gnupg
-    ```
-
-### Linux (Ubuntu):
-
-1. Open the Terminal.
-2. Install GPG using the following command:
-    ```sh
-    sudo apt-get update
-    sudo apt-get install gnupg
+    cd backend
     ```
 
-## Running Docker Compose
+2. Run the seeders to populate the database. Make sure the seeders are located in backend/database/seeders:
 
-1. Clone your system's repository to your local machine:
     ```sh
-    git clone <your repository URL>
-    ```
-2. Navigate to the project's root directory in the Terminal or Command Prompt:
-    ```sh
-    cd <project directory>
-    ```
-3. Run the following command to start the system:
-    ```sh
-    docker-compose up
-    ```
-4. Wait until all services are started. Once completed, you can access the application at [http://localhost:8000](http://localhost:8000).
-
-**Notes:**
-- Make sure no other service is running on port 8000 as it may cause conflicts with your system.
-- If you encounter issues while running Docker Compose, verify that Docker and Docker Compose are installed correctly and all prerequisites are met.
-- To stop the system, press `Ctrl + C` in the Terminal or Command Prompt where Docker Compose is running.
-
-## Specific Steps for FlightHub
-
-### Step 1: Clone the Repository
-
-1. Open a web browser and go to the FlightHub repository page on GitHub: [FlightHub Repository](your repository link).
-2. Click the "Code" button and select "Download ZIP" to download the FlightHub source code to your computer.
-3. Extract the ZIP file to a folder of your choice.
-
-### Step 2: Set Up the Backend
-
-1. Open a terminal or command prompt and navigate to the `flightHub/backend` directory.
-2. Run the following command to build the Docker image for the backend:
-    ```sh
-    docker build -t flighthub-backend .
-    ```
-3. After the image is built, run the following command to start the Docker container:
-    ```sh
-    docker run -d -p 8000:8000 flighthub-backend
+    php artisan db:seed --class=AirlinesTableSeeder
+    php artisan db:seed --class=AirportsTableSeeder
+    php artisan db:seed --class=FlightsTableSeeder
     ```
 
-### Step 3: Set Up the Frontend
+# Running the Frontend
 
-1. Open a new terminal or command prompt and navigate to the `flightHub/frontend` directory.
-2. Run the following command to build the Docker image for the frontend:
+1. Navigate to the frontend directory:
+
     ```sh
-    docker build -t flighthub-frontend .
-    ```
-3. After the image is built, run the following command to start the Docker container:
-    ```sh
-    docker run -d -p 3000:3000 flighthub-frontend
+    cd ../frontend
     ```
 
-### Step 4: Access FlightHub
+2. Install project dependencies:
 
-1. Open a web browser (e.g., Google Chrome, Mozilla Firefox).
-2. Enter the following address in the browser's address bar:
     ```sh
-    http://localhost:3000
+    npm install
     ```
-This will launch FlightHub in your web browser, and you can start using it.
+
+3. Start the Next.js server on port 3000:
+
+    ```sh
+    npm run dev -- -p 3000
+    ```
+
+# Final Verification
+
+- Check if the backend is running at: [http://localhost:8000](http://localhost:8000)
+- Check if the frontend is running at: [http://localhost:3000](http://localhost:3000)
+
+Congratulations! Your project should be running correctly. If you encounter any issues, refer to the documentation or contact us for assistance.
