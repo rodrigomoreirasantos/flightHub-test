@@ -24,8 +24,7 @@ Before you begin, make sure you have the following software installed on your ma
 Clone the project repository to your local machine:
 
 ```sh
-git clone https://github.com/your-username/your-repository.git
-cd your-repository
+git clone git@github.com:rodrigomoreirasantos/flightHub-test.git
 ```
 # Database Configuration
 
