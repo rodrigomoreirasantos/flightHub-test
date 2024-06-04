@@ -98,7 +98,7 @@ git clone git@github.com:rodrigomoreirasantos/flightHub-test.git
 3. Start the Next.js server on port 3000:
 
     ```sh
-    npm run dev -- -p 3000
+    npm run dev -p 3000
     ```
 
 # Final Verification
